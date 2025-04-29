@@ -11,6 +11,10 @@
 #### Project Requirements:
 > CRUD operations
 
+> Data Visualization
+
+> Data Mining 
+
 
 #### Optional:
 > Use MVC architecture
