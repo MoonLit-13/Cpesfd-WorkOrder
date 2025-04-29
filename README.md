@@ -1,17 +1,14 @@
 # Work Order Project
-### Tools:
-> Xammp
+### Tools:<br>
+> Xammp <br>
+> PHP <br>
+> Bootstrap<br>
+> Chart.js<br>
 
-> PHP
-
-> Bootstrap
-
-> Chart.js
-
-#### Project Requirements:
-> CRUD operations
+#### Project Requirements: <br>
+> CRUD operations <br>
 
 
-#### Optional:
-> Use MVC architecture
+#### Optional: <br>
+> Use MVC architecture <br>
 > 
