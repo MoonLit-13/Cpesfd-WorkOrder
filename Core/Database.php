@@ -12,7 +12,10 @@ class Database {
             $this->pdo = new PDO("mysql:host={$this->host};dbname={$this->dbName}", $this->username, $this->password);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            die("Database connection failed: " . $e->getMessage());
+            // If connection fails, include setupdb.php
+            echo "Database connection failed: " . $e->getMessage() . "<br>";
+            echo "Running setupdb.php to initialize the database...<br>";
+            include __DIR__ . '/setupdb.php'; // Use absolute path
         }
     }
 

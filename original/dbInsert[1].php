@@ -5,14 +5,74 @@ $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$dsn = "mysql:host=$host;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ];
 
 try {
+    // Attempt to connect to the database
     $pdo = new PDO($dsn, $user, $pass, $options);
+
+    // Check if the database exists, if not, create it
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+    $pdo->exec("USE `$db`");
+
+    // Create necessary tables if they don't exist
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS work_orders (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            company_name VARCHAR(255),
+            street VARCHAR(255),
+            city VARCHAR(255),
+            zip VARCHAR(20),
+            phone VARCHAR(20),
+            fax VARCHAR(20),
+            email VARCHAR(255),
+            job_description TEXT,
+            bill_name VARCHAR(255),
+            bill_company VARCHAR(255),
+            bill_address VARCHAR(255),
+            bill_city VARCHAR(255),
+            bill_phone VARCHAR(20),
+            ship_name VARCHAR(255),
+            ship_company VARCHAR(255),
+            ship_address VARCHAR(255),
+            ship_city VARCHAR(255),
+            ship_phone VARCHAR(20),
+            completed_date DATE,
+            signature TEXT,
+            date DATE
+        )
+    ");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS work_order_items (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            work_order_id INT,
+            qty INT,
+            description TEXT,
+            taxed BOOLEAN,
+            unit_price DECIMAL(10, 2),
+            line_total DECIMAL(10, 2),
+            FOREIGN KEY (work_order_id) REFERENCES work_orders(id) ON DELETE CASCADE
+        )
+    ");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS additional_charges (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            work_order_id INT,
+            shipping_handling DECIMAL(10, 2),
+            other_charges DECIMAL(10, 2),
+            subtotal DECIMAL(10, 2),
+            taxable DECIMAL(10, 2),
+            tax DECIMAL(10, 2),
+            total DECIMAL(10, 2),
+            FOREIGN KEY (work_order_id) REFERENCES work_orders(id) ON DELETE CASCADE
+        )
+    ");
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 1. Insert into work_orders
